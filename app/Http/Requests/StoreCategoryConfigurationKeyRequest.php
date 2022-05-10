@@ -27,8 +27,9 @@ class StoreCategoryConfigurationKeyRequest extends FormRequest
 
             //
 
-            'name'=>['required'],
+            //'name'=>['required'],
             'extra'=>['required'],
+            'name'=>['required'],
         ];
     }
 }

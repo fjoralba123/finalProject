@@ -14,8 +14,12 @@
                 <div class="col-sm-12">
                     <div class="form-group">
                         <!-- <label for="name">Name</label> -->
-                        <label for="name">Name</label> <input type="name" class="form-control" id="name" name="name" placeholder="Key name"> </div>
+                        <label for="name">Name</label> <input type="name" class="form-control" id="name" name="name" value="{{old("name")}}" placeholder="Key name"> </div>
 
+                        @if(isset($uniqueError))
+
+
+                        <span class="invalid-feedback d-block" role="alert">{{$uniqueError}}</span>@endif
     @error('name')
                 <span class="invalid-feedback d-block" role="alert"> {{$message}}</span>
   @enderror
@@ -25,7 +29,7 @@
                 <div class="col-sm-12">
                     <div class="form-group">
                          <label for="extra">Extra</label>
-    <input type="text" class="form-control" id="extra" name="extra" placeholder="Extras Json Format">
+    <input type="text" class="form-control" id="extra" name="extra" placeholder="Extras Json Format" value="{{old("extra")}}">
     @error('extra')
                 <span class="invalid-feedback d-block" role="alert"> {{$message}}</span>
   @enderror
@@ -34,7 +38,7 @@
                 </div>
             </div>
 
-             <button class="btn btn-primary btn-block confirm-button" type="submit">Confirm</button>
+             <button class="btn btn-primary btn-block confirm-button" id="confirm" type="submit">Confirm</button>
         </div>
     </div>
 </div>

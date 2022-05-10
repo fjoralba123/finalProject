@@ -50,6 +50,18 @@ class CategoryConfigurationKeyController extends Controller
     {
         //create record
 
+         $name = $request->get('name');
+         $data = CategoryConfigurationKey::query()
+          ->where('name','==', $name)
+          ->get();
+         if($data)
+         {
+          $uniqueError='This name already exists !';
+
+          return view("keys.create",compact('uniqueError'));
+         }
+
+        else {
         CategoryConfigurationKey::create([
             'name'=>$request->name,
             'extra'=>json_encode([$request->extra,])
@@ -59,7 +71,7 @@ class CategoryConfigurationKeyController extends Controller
                 //store the submitted task
                 return redirect()->route('keys.index');
 
-
+    }
 
     }
 
@@ -69,9 +81,10 @@ class CategoryConfigurationKeyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(CategoryConfigurationKey $key)
     {
         //
+
     }
 
     /**
@@ -98,6 +111,7 @@ class CategoryConfigurationKeyController extends Controller
         //
 
         $key->extra=json_encode([$request->extra,]);
+
         $key->save();
         return redirect()->route('keys.index');
     }
@@ -108,12 +122,25 @@ class CategoryConfigurationKeyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy( CategoryConfigurationKey $key)
-    {
+    public function destroy( CategoryConfigurationKey $key )
+    {dd($key);
         //
-        $key->deleted_at=now();
-        $key->save();
-        return redirect()->route('keys.index');
+$configurations=CategoryConfiguration::query()->where('key','==',$key->name)->get();
+if($configurations)
+{
+    $deleteError="You cannot delete this key, as it already has configurations.";
+    $keys=CategoryConfigurationKey::query()->whereNull('deleted_at')->get();
+    return view("keys.index",compact('deleteError','keys'));
 
-    }
+}
+else
+        {$key->delete();
+
+
+      return redirect()->route('keys.index');
+
+    }}
+
+
+
 }

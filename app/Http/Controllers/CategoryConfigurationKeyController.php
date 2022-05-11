@@ -15,10 +15,14 @@ class CategoryConfigurationKeyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $keys=CategoryConfigurationKey::query()->whereNull('deleted_at')->get();
+        $keys=CategoryConfigurationKey::query()->get();
+        $name=$request->input('name');
+        if($name){
+            $keys=CategoryConfigurationKey::query()->where("name","LIKE","%{$name}%")->get();
+        }
         return view('keys.index', ['keys' => $keys]);
     }
 
@@ -52,8 +56,9 @@ class CategoryConfigurationKeyController extends Controller
 
          $name = $request->get('name');
          $data = CategoryConfigurationKey::query()
-          ->where('name','==', $name)
-          ->get();
+          ->where('name', $name)
+          ->first();
+
          if($data)
          {
           $uniqueError='This name already exists !';
@@ -64,12 +69,12 @@ class CategoryConfigurationKeyController extends Controller
         else {
         CategoryConfigurationKey::create([
             'name'=>$request->name,
-            'extra'=>json_encode([$request->extra,])
+            'extra'=>$request->extra
 
         ]);
 
                 //store the submitted task
-                return redirect()->route('keys.index');
+                return redirect()->route('keys.index')->with('created', 'Category configuration key created successfully!');
 
     }
 
@@ -110,10 +115,9 @@ class CategoryConfigurationKeyController extends Controller
     {
         //
 
-        $key->extra=json_encode([$request->extra,]);
-
+        $key->extra=$request->extra;
         $key->save();
-        return redirect()->route('keys.index');
+        return redirect()->route('keys.index')->with('edited', 'Category configuration key editted successfully!');
     }
 
     /**
@@ -122,25 +126,34 @@ class CategoryConfigurationKeyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy( CategoryConfigurationKey $key )
-    {dd($key);
-        //
-$configurations=CategoryConfiguration::query()->where('key','==',$key->name)->get();
+    public function destroy( Request $request )
+    {
+
+$keys=CategoryConfigurationKey::query()->whereNull('deleted_at')->get();
+
+$key=CategoryConfigurationKey::find($request->id);
+
+$keyName=$key->name;
+
+$configurations=CategoryConfiguration::query()->where('key',$keyName)->first();
+
 if($configurations)
 {
     $deleteError="You cannot delete this key, as it already has configurations.";
-    $keys=CategoryConfigurationKey::query()->whereNull('deleted_at')->get();
-    return view("keys.index",compact('deleteError','keys'));
+
+    return view("keys.index",['deleteError'=>$deleteError,'keys'=>$keys]);
 
 }
 else
-        {$key->delete();
+       {
+            $key->delete();
+            return redirect()->route('keys.index')->with('deleted', 'Category configuration key deleted successfully!');;
 
+    }
+}
 
-      return redirect()->route('keys.index');
-
-    }}
-
-
+public function getKeyById(CategoryConfigurationKey $key){
+return response()->json($key);
+}
 
 }

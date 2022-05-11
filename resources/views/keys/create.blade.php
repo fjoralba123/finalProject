@@ -7,7 +7,9 @@
     <div class="card px-1 py-4">
 
         <div class="card-body">
-            <h4 class="card-title mb-3">Create New Key</h4>
+            <h4 class="card-title mb-3">Create New Category Configuration Key</h4>
+
+
 
 
             <div class="row">
@@ -25,6 +27,7 @@
   @enderror
                     </div>
             </div>
+            <br>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -37,8 +40,8 @@
                     </div>
                 </div>
             </div>
-
-             <button class="btn btn-primary btn-block confirm-button" id="confirm" type="submit">Confirm</button>
+<br><br>
+             <button class="btn btn-success btn-block confirm-button" id="confirm" style="width:300px;margin-left:20px;"type="submit">Create</button>
         </div>
     </div>
 </div>

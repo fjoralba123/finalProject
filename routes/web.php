@@ -20,13 +20,14 @@ Route::get('/', function () {
 
 Auth::routes();
 Route::group(['middleware'=>['auth']],function(){
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\CategoryConfigurationKeyController::class, 'index'])->name('key.index');
 Route::get('keys/create', [App\Http\Controllers\CategoryConfigurationKeyController::class, 'create'])->name('keys.create');
 Route::get('/keys', [App\Http\Controllers\CategoryConfigurationKeyController::class, 'index'])->name('keys.index');
 Route::post('keys', [App\Http\Controllers\CategoryConfigurationKeyController::class, 'store'])->name('keys.store');
 Route::get('keys/edit/{key}', [App\Http\Controllers\CategoryConfigurationKeyController::class, 'edit'])->name('keys.edit');
 Route::put('keys/{key}', [App\Http\Controllers\CategoryConfigurationKeyController::class, 'update'])->name('keys.update');
+Route::get('keys/{key}', [App\Http\Controllers\CategoryConfigurationKeyController::class,  'getKeyById']);
 
-Route::delete('keys/{key}', [App\Http\Controllers\CategoryConfigurationKeyController::class,  'destroy'])->name('keys.destroy');
+Route::delete('keys', [App\Http\Controllers\CategoryConfigurationKeyController::class,  'destroy'])->name('keys.destroy');
 
 });
